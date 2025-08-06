@@ -235,7 +235,7 @@ const style = StyleSheet.create({
     margin: 2,
     width: 50,
     height: 50,
-    position: 'fixed',
+    //position: 'fixed',
     backgroundColor: 'rgb(0,204,82)',
     borderRadius: 100,
     display: 'flex',
