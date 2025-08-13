@@ -16,7 +16,7 @@ export default function posts() {
     console.log('params ', userId)
     useEffect(() => {
         async function fetchPosts() {
-            const response = await fetch(`http://10.21.144.197:3000/users/${userId}/posts`);
+            const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/${userId}/posts`);
             const body: Post[] = await response.json();
             console.log('body ', body);
             setPosts(body)

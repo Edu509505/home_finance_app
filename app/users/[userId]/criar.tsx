@@ -59,7 +59,8 @@ export default function criar() {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={{ flex: 1 }}>
+            style={{ flex: 1 }}
+        >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={style.main}>
                     <View style={{ backgroundColor: 'rgb(0,204,82)', width: '100%', height: 100, display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
