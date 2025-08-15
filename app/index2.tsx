@@ -1,49 +1,45 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
 import { Link } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, TouchableOpacity, View, Text, ScrollView, Alert, Button, } from "react-native";
+import { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View, Text, ScrollView, Alert } from "react-native";
+import  { useStoreToken } from "../storoge/useStore"
+
 
 export default function Index() {
 
   const [somaSaida, setSomaSaida] = useState();
+  const [somaEntrada, setsomaEntrada] = useState();
+  const [saldo, setsaldo] = useState();
   const atualizar = useIsFocused();
+  const { token } = useStoreToken();
+
+  console.log("Esse é meu token", token)
 
   useEffect(() => {
     async function somaSaida() {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/somadosvalores`)
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/somadosvalores`, {
+        headers: {
+          authorization: token!
+        }
+      })
       const body = await response.json()
+      setsaldo(body[0])
+      setsomaEntrada(body[1])
       setSomaSaida(body[2])
     }
     somaSaida()
-  }, [atualizar])
-
-  const [somaEntrada, setsomaEntrada] = useState();
-  useEffect(() => {
-    async function somaEntrada() {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/somadosvalores`)
-      const body = await response.json()
-      setsomaEntrada(body[1])
-    }
-    somaEntrada()
-  }, [atualizar])
-
-  const [saldo, setsaldo] = useState();
-  useEffect(() => {
-    async function saldo() {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/somadosvalores`)
-      const body = await response.json()
-      setsaldo(body[0])
-    }
-    saldo()
   }, [atualizar])
 
 
   const [users, setUsers] = useState<any[]>([]);
   useEffect(() => {
     async function fetchUser() {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao`);
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao`, {
+        headers: {
+          authorization: token!
+        }
+      });
       const body = await response.json();
       console.log('body', body);
       setUsers(body);
@@ -54,13 +50,19 @@ export default function Index() {
 
     async function deleteUser(userId: number) {
       const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao/${userId}`, {
-        method: "DELETE"
+        method: "DELETE",
+        headers:{authorization: token!}
 
-      })
+      }
+    )
 
       if (response.ok) {
     
-        const responseUsers = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao`);
+        const responseUsers = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao`,
+          {
+            headers:{authorization: token!}
+          }
+        );
         const bodyUsers = await responseUsers.json();
         setUsers(bodyUsers);
         Alert.alert(

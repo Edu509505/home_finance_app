@@ -4,14 +4,18 @@ import { Text, View, StyleSheet, TextInput, Alert, Button, ScrollView, KeyboardA
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Picker } from '@react-native-picker/picker';
+import  { useStoreToken } from "../../../storoge/useStore"
 
 export default function criar() {
+
+    const { token } = useStoreToken();
 
     async function criarUsuario() {
         const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                authorization: token!
             },
             body: JSON.stringify({
                 category: update.category,

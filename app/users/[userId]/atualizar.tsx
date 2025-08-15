@@ -5,13 +5,20 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Picker } from '@react-native-picker/picker';
+import  { useStoreToken } from "../../../storoge/useStore"
+
 export default function atualizar() {
 
     const { userId } = useLocalSearchParams();
+    const { token } = useStoreToken();
 
     useEffect(() => {
         async function fetchUserById() {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao/${userId}`);
+            const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao/${userId}`, {
+            headers: {
+            authorization: token!
+        }
+      });
             const body = await response.json();
             console.log('aqui está: ', body);
 
@@ -29,7 +36,8 @@ export default function atualizar() {
         const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/movimentacao/${userId}`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                authenticate: token!
             },
             body: JSON.stringify({
                 title: movimentacao.title,

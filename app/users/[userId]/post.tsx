@@ -1,7 +1,8 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react"
-import { Text, View, StyleSheet, Button } from "react-native";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Text, View, StyleSheet } from "react-native";
+import  { useStoreToken } from "../../../storoge/useStore"
+
 interface Post {
     id: number,
     title: string,
@@ -11,12 +12,18 @@ interface Post {
 
 export default function posts() {
 
+    const { token } = useStoreToken();
+
     const [posts, setPosts] = useState<Post[]>([]);
     const { userId } = useLocalSearchParams();
     console.log('params ', userId)
     useEffect(() => {
         async function fetchPosts() {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/${userId}/posts`);
+            const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/${userId}/posts`, {
+        headers: {
+          authorization: token!
+        }
+      });
             const body: Post[] = await response.json();
             console.log('body ', body);
             setPosts(body)

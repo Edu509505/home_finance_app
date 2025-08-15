@@ -1,6 +1,8 @@
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import { View, Text, TextInput, Button, Alert } from "react-native";
+import  { useStoreToken } from "../storoge/useStore"
+
 
 interface Login {
   email: string;
@@ -8,6 +10,9 @@ interface Login {
 }
 
 export default function Login() {
+
+  const { saveToken } = useStoreToken();
+
   const [formLogin, setFormLogin] = useState<Login>({
     email: "",
     password: "",
@@ -29,18 +34,19 @@ export default function Login() {
     const responseOk = response.ok
     const body = await response.json();
     console.log('responseOk', responseOk);
+    console.log('body', body);
 
     if(response.ok){
         router.push('/index2')
-    }else(
+        saveToken(body.token)
+    }else{
         Alert.alert(
             'Erro',
             'Senha ou usuário incorreto'
         )
-    )
+      }
 
   }
-  console.log(formLogin)
 
   return (
     <>
